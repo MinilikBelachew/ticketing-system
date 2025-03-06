@@ -1,9 +1,14 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import Navbar from "./components/Navbar";
 
 import Dashboard from "./components/pages/Dashboard";
-import AdminDashboard from "./components/pages/AdminDashboard"
+import AdminDashboard from "./components/pages/AdminDashboard";
 import LoginPage from "./components/pages/LoginPage";
 import SignupPage from "./components/pages/SignupPage";
 
@@ -27,7 +32,7 @@ class App extends React.Component {
             <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            
+
             <Route
               path="/dashboard"
               element={
@@ -36,7 +41,7 @@ class App extends React.Component {
                 </PrivateRoute>
               }
             />
-            
+
             <Route
               path="/admin"
               element={

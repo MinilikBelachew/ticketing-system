@@ -4,7 +4,7 @@ export const loginUser = (userData) => async (dispatch) => {
   try {
     const res = await axios.post("http://localhost:5000/api/auth/login", userData);
     
-    const { token, user } = res.data; // Extract token and user details
+    const { token, user } = res.data; 
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
 
@@ -21,7 +21,7 @@ export const signupUser = (userData) => async (dispatch) => {
   try {
     const res = await axios.post("http://localhost:5000/api/auth/signup", userData);
     
-    const { token, user } = res.data; // Extract token and user details
+    const { token, user } = res.data; 
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
 
