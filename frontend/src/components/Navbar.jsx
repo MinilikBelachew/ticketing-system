@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logoutUser } from "../redux/actions/authActions";
 import { 
   Rocket, 
   LogIn, 
@@ -7,29 +9,23 @@ import {
   LogOut, 
   Menu as MenuIcon,
   X 
-} from 'lucide-react';
+} from "lucide-react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Check if user is logged in (Assuming auth token is stored in localStorage)
-    const token = localStorage.getItem('authToken');
-    setIsAuthenticated(!!token);
-  }, []);
+  const { token } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken'); // Remove token
-    setIsAuthenticated(false);
-    navigate('/login'); // Redirect to login page
+    dispatch(logoutUser());
+    navigate("/login"); // Redirect to login page
   };
 
   return (
     <nav className="relative bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 shadow-lg">
       <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-500/20 to-blue-600/20 animate-gradient"></div>
-
+      
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -44,18 +40,21 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
-            {!isAuthenticated ? (
+            {!token ? (
               <>
                 <Link to="/login" className="nav-link">
-                  <LogIn className="h-5 w-5" /> Login
+                  <LogIn className="h-5 w-5" />
+                  <span>Login</span>
                 </Link>
                 <Link to="/signup" className="nav-link">
-                  <UserPlus className="h-5 w-5" /> Signup
+                  <UserPlus className="h-5 w-5" />
+                  <span>Signup</span>
                 </Link>
               </>
             ) : (
               <button onClick={handleLogout} className="nav-link">
-                <LogOut className="h-5 w-5" /> Logout
+                <LogOut className="h-5 w-5" />
+                <span>Logout</span>
               </button>
             )}
           </div>
@@ -72,57 +71,57 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu */}
-        <div
-          className={`md:hidden absolute top-full left-0 right-0 bg-blue-900/95 backdrop-blur-lg shadow-lg rounded-b-2xl transition-all duration-300 ease-in-out ${
-            isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
-          }`}
-        >
-          <div className="px-4 pt-2 pb-3 space-y-1">
-            {!isAuthenticated ? (
-              <>
-                <Link to="/login" className="mobile-link" onClick={() => setIsOpen(false)}>
-                  <LogIn className="h-5 w-5" /> Login
-                </Link>
-                <Link to="/signup" className="mobile-link" onClick={() => setIsOpen(false)}>
-                  <UserPlus className="h-5 w-5" /> Signup
-                </Link>
-              </>
-            ) : (
-              <button onClick={handleLogout} className="mobile-link">
-                <LogOut className="h-5 w-5" /> Logout
-              </button>
-            )}
+        {isOpen && (
+          <div className="md:hidden absolute top-full left-0 right-0 bg-blue-900/95 backdrop-blur-lg shadow-lg rounded-b-2xl transition-all duration-300 ease-in-out">
+            <div className="px-4 pt-2 pb-3 space-y-1">
+              {!token ? (
+                <>
+                  <Link to="/login" className="nav-link" onClick={() => setIsOpen(false)}>
+                    <LogIn className="h-5 w-5" />
+                    <span>Login</span>
+                  </Link>
+                  <Link to="/signup" className="nav-link" onClick={() => setIsOpen(false)}>
+                    <UserPlus className="h-5 w-5" />
+                    <span>Signup</span>
+                  </Link>
+                </>
+              ) : (
+                <button onClick={() => { handleLogout(); setIsOpen(false); }} className="nav-link">
+                  <LogOut className="h-5 w-5" />
+                  <span>Logout</span>
+                </button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* CSS Styling for Navigation Links */}
+      {/* Styling for active buttons */}
       <style jsx>{`
+        @keyframes gradient {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+
+        .animate-gradient {
+          animation: gradient 15s linear infinite;
+          background-size: 200% 200%;
+        }
+
         .nav-link {
           display: flex;
           align-items: center;
-          gap: 5px;
+          space-x-2;
           padding: 8px 16px;
           border-radius: 8px;
           color: #cbd5e1;
-          transition: color 0.2s;
+          transition: color 0.2s ease-in-out, background 0.2s ease-in-out;
         }
+
         .nav-link:hover {
-          color: white;
-        }
-        .mobile-link {
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          padding: 12px;
-          width: 100%;
-          text-align: left;
-          color: #cbd5e1;
-          transition: background 0.2s;
-        }
-        .mobile-link:hover {
+          color: #fff;
           background: rgba(255, 255, 255, 0.1);
-          color: white;
         }
       `}</style>
     </nav>

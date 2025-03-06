@@ -1,9 +1,18 @@
-const initialState = { user: null, token: null };
+
+const initialState = {
+  user: JSON.parse(localStorage.getItem("user")) || null,
+  token: localStorage.getItem("token") || null,
+};
 
 export const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case "LOGIN_SUCCESS":
-      return { ...state, user: action.payload.user, token: action.payload.token };
+    case "SIGNUP_SUCCESS":
+      return { 
+        ...state, 
+        user: action.payload, 
+        token: localStorage.getItem("token") 
+      };
     case "LOGOUT":
       return { user: null, token: null };
     default:

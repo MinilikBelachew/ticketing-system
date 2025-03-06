@@ -33,3 +33,9 @@ export const signupUser = (userData) => async (dispatch) => {
     return { success: false, error: error.response?.data?.message || "Signup failed" };
   }
 };
+export const logoutUser = () => (dispatch) => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+
+  dispatch({ type: "LOGOUT" });
+};
