@@ -1,6 +1,9 @@
+
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 class TicketForm extends Component {
   state = { title: "", description: "" };
@@ -11,7 +14,7 @@ class TicketForm extends Component {
     e.preventDefault();
     try {
       const token = this.props.token;
-      await axios.post("http://localhost:5000/api/tickets", this.state, {
+      await axios.post(`${API_BASE_URL}/api/tickets`, this.state, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Ticket created successfully!");
