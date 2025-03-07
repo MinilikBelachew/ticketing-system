@@ -9,11 +9,14 @@ const SignupPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [redirectTo, setRedirectTo] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); // State for loading spinner
   const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); // Show spinner
     const response = await dispatch(signupUser({ name, email, password }));
+    setIsLoading(false); // Hide spinner
 
     if (response.success) {
       setRedirectTo('/dashboard');
@@ -25,12 +28,18 @@ const SignupPage = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-green-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center  py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-2xl transform transition-all duration-500 hover:scale-105">
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
             Create your account
           </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Already have an account?{' '}
+            <a href="/login" className="font-medium text-green-600 hover:text-green-500">
+              Sign in
+            </a>
+          </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
@@ -94,8 +103,16 @@ const SignupPage = () => {
             <button
               type="submit"
               className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-300 ease-in-out transform hover:scale-102"
+              disabled={isLoading} // Disable button during loading
             >
-              Sign Up
+              {isLoading ? (
+                <div className="flex items-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <span className="ml-2">Signing Up...</span>
+                </div>
+              ) : (
+                'Sign Up'
+              )}
             </button>
           </div>
         </form>
